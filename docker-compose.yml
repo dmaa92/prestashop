@@ -1,0 +1,37 @@
+version: "3"
+networks: 
+    cx-prestashop-1.7.8-net:
+ 
+services: 
+    mysql:
+        image: mysql:5.7
+        container_name: prestashop-1.7.8-mysql  
+        tty: true
+        ports:
+            - "4206:3306"
+        volumes:
+            - "./var/lib/mysql/:/var/lib/mysql"
+        environment: 
+            MYSQL_ROOT_PASSWORD: testwuala
+            MYSQL_USER: prestashop
+            MYSQL_DATABASE: prestashop
+            MYSQL_PASSWORD: prestashop 
+        networks: 
+            - cx-prestashop-1.7.8-net
+    server:
+        image: prestashop/prestashop:1.7.8
+        container_name: prestashop-1.7.8
+        ports:
+            - "4280:80"
+        volumes:
+            - "./var/www/html/:/var/www/html"
+        environment:
+            DB_SERVER: prestashop-1.7.8-mysql
+            DB_PASSWD: testwuala
+            DB_NAME: prestashop
+            DB_USER: prestashop
+            ADMIN_PASSWD: prestashop
+        depends_on:  
+            - mysql
+        networks: 
+            - prestashop-1.7.8-net
